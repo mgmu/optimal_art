@@ -1,0 +1,49 @@
+<h1 id="optimal_art">optimal_art</h1>
+<p>Solver for the “Optimal art” problem of <a href="https://primers.xyz/0">primers.xyz</a>.</p>
+<h2 id="solutions">Solutions</h2>
+<h3 id="naive-approach">Naive approach</h3>
+<p>Algorithm for the naive approach:</p>
+<pre><code>parse input -&gt; a [][]bool painted such that painted[i][j] is true if pixel (i, j) is black.
+[]string operations
+for i in painted height
+    for j in painted width
+        if painted[i][j] is true then
+            append &quot;FILL,j,i,1&quot; to back of operations list
+write each element of operations to file</code></pre>
+<p>This approach produces a file too big to be accepted by primers website now.</p>
+<p>Score (obtained with <code>wc -l</code>): 84784</p>
+<h3 id="greedy-approach">Greedy approach</h3>
+<p>Fill the biggest square you can</p>
+<pre><code>parse input -&gt; a [][]bool painted such that painted[i][j] is true if pixel (i, j) is black.
+initialize a visited [][]bool of same size than painted such that visited[i][j] is true if painted[i][j] was visited
+for i in painted height
+    for j in painted width
+        if visited[i][j] then do nothing
+        else if painted[i][j] then
+            size = 1
+            isNeighborWhite = false
+            while (i+size &lt; height &amp;&amp; j+size &lt; width)
+                for k = 0; k &lt; size+1; k++
+                    if !painted[i+k, j+size]
+                        isNeighborWhite = true
+                    if isNeighborWhite then break
+                if isNeighborWhite then break
+                for k = size - 1; k &gt;= 0; k--
+                    if !painted[i+size, j+k]
+                        isNeighborWhite = true
+                    if isNeighborWhite then break
+                if isNeighborWhite then break
+                else
+                    for k = 0; k &lt; size+1; k++
+                        visited[i+k, j+size] = true
+                    for k = size - 1; k &gt;= 0; k--
+                        visited[i+size, j+k] = true
+                    incremente size
+            fill, j, i, size</code></pre>
+<p>Score: 4577, a good improvement</p>
+<h2 id="other-ideas">Other ideas</h2>
+<p>Other ideas that were not implemented:</p>
+<ul>
+<li>count black and white cell, if black &gt; white then fill only else one fill then only erase</li>
+<li>dynamic programming approach, solve pb for painting of incrementing size</li>
+</ul>
